@@ -1,5 +1,5 @@
 {
-  "name": "react-input",
+  "name": "@fhaglund/react-input",
   "version": "0.1.0",
   "description": "Unified input component",
   "author": "Filip Haglund",
