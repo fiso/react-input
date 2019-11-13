@@ -1,8 +1,8 @@
-import React, {useCallback, useState} from 'react';
+import React, {useCallback, useRef, useState} from 'react';
 import classNames from 'classnames';
 import PropTypes from 'prop-types';
-import {replaceVars} from 'replacevars';
-import './Input.scss';
+import {replaceVars} from '@fhaglund/replacevars';
+// import './Input.scss';
 
 /*
   clear () {
@@ -49,7 +49,7 @@ export default function Input ({choices, className, label, multiple,
       : false;
 
     return (
-      <select ref={this.inputRef}
+      <select ref={inputRef}
         className={classNames(outerClass, type, className)}
         multiple={multiple}
         defaultValue={multiple
@@ -72,19 +72,19 @@ export default function Input ({choices, className, label, multiple,
   } else if (['checkbox', 'radio'].some(e => e === type)) {
     return (
       <label className={classNames(outerClass, type, className)}>
-        <input ref={this.inputRef} type={type} {...props} />
+        <input ref={inputRef} type={type} {...props} />
         <span className='label'>{label}</span>
       </label>
     );
   } else if (type === 'multiline') {
     return (
       <textarea className={classNames(outerClass, type, className)}
-        ref={this.inputRef} placeholder={placeholder} {...props} />
+        ref={inputRef} placeholder={placeholder} {...props} />
     );
   } else if (type === 'file') {
     return (
       <label className={classNames(outerClass, type, className)} tabIndex={-1}>
-        <input ref={this.inputRef} type={type} onChange={onChangeFile}
+        <input ref={inputRef} type={type} onChange={onChangeFile}
           multiple={multiple} {...props} />
         <span>{filename || placeholder || 'Choose a file…'}</span>
       </label>
