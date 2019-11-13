@@ -2,30 +2,25 @@ import React, {useCallback, useRef, useState} from 'react';
 import classNames from 'classnames';
 import PropTypes from 'prop-types';
 import {replaceVars} from '@fhaglund/replacevars';
-// import './Input.scss';
+import {outerClass} from './Input.scss';
+import './Input.scss';
 
-/*
-  clear () {
-    this.inputRef.current.value = '';
-  }
+let idCounter = 0;
 
-  focus () {
-    this.inputRef.current.focus();
-  }
+export function uniqueId (prefix = '_') {
+  let id = '';
 
-  set value (value) {
-    this.inputRef.current.value = value;
-  }
+  do {
+    id = prefix + idCounter++;
+  } while (document.getElementById(id) !== null);
 
-  get value () {
-    return this.inputRef.current.value;
-  }
-*/
+  return id;
+}
 
-const outerClass = 'r-input';
 
 export default function Input ({choices, className, label, multiple,
   multipleFilesLabel, onChange, placeholder, type, ...props}) {
+  const [id] = useState(uniqueId());
   const inputRef = useRef();
   const [filename, setFilename] = useState('');
 
@@ -49,8 +44,8 @@ export default function Input ({choices, className, label, multiple,
       : false;
 
     return (
-      <select ref={inputRef}
-        className={classNames(outerClass, type, className)}
+      <select className={classNames(outerClass, type, className)}
+        ref={inputRef}
         multiple={multiple}
         defaultValue={multiple
           ? Array.isArray(props.defaultValue)
@@ -76,22 +71,46 @@ export default function Input ({choices, className, label, multiple,
         <span className='label'>{label}</span>
       </label>
     );
+  } else if (type === 'radiogroup') {
+    const {defaultValue, ...restProps} = props;
+    return (
+      <fieldset className={classNames(outerClass, type, className)} {...restProps}>
+        <legend>{label}</legend>
+        {choices.map((choice, i) => {
+          const {label, value} = typeof choice === 'string'
+            ? {label: choice, value: String(i)}
+            : choice;
+          return <Input name={props.name} type='radio' key={i}
+            label={label} defaultChecked={value === String(defaultValue)}
+            value={value} required={props.required} />;
+        }
+        )}
+      </fieldset>
+    );
   } else if (type === 'multiline') {
     return (
       <textarea className={classNames(outerClass, type, className)}
         ref={inputRef} placeholder={placeholder} {...props} />
     );
   } else if (type === 'file') {
+    const placeholderVisible = !filename;
+
     return (
-      <label className={classNames(outerClass, type, className)} tabIndex={-1}>
-        <input ref={inputRef} type={type} onChange={onChangeFile}
-          multiple={multiple} {...props} />
-        <span>{filename || placeholder || 'Choose a file…'}</span>
-      </label>
+      <>
+        <input className={classNames(outerClass, type, className, {
+          'placeholder-visible': placeholderVisible,
+        })}
+          ref={inputRef} type={type} onChange={onChangeFile}
+          multiple={multiple} {...props} id={id} />
+        <label
+          htmlFor={id} tabIndex={-1}>
+          {filename || placeholder || 'Choose a file…'}
+        </label>
+      </>
     );
   } else {
-    return <input type={type} ref={inputRef} placeholder={placeholder}
-      {...props} />;
+    return <input className={classNames(outerClass, type, className)}
+      type={type} ref={inputRef} placeholder={placeholder} {...props} />;
   }
 }
 
@@ -99,12 +118,14 @@ Input.propTypes = {
   choices: PropTypes.array, // FIXME: func assert(choices.length > 0);
   className: PropTypes.string,
   defaultValue: PropTypes.string,
+  getInterface: PropTypes.func,
   label: PropTypes.string,
   multiple: PropTypes.bool,
   multipleFilesLabel: PropTypes.string,
   name: PropTypes.string,
   onChange: PropTypes.func,
   placeholder: PropTypes.string,
+  required: PropTypes.bool,
   type: PropTypes.string,
 };
 

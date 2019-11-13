@@ -1,13 +1,14 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import Input from '../../src/Input';
+import './style.scss';
 
 const root = document.createElement('div');
 document.body.appendChild(root);
 
 ReactDOM.render(
-  <div>
-    <Input placeholder='Regular text input' name='text' required />
+  <div className='demo'>
+    <Input placeholder='Regular text input' name='text' required autoFocus />
     <Input type='email' placeholder='Email input' name='email' required />
     <Input type='password' placeholder='Password input' name='password'
       required />
@@ -24,7 +25,7 @@ ReactDOM.render(
     <Input type='color' placeholder='Pick a color' name='color'
       defaultValue='#a87cff'/>
     <Input type='number' placeholder='Pick a number' name='number' required />
-    <Input type='select' placeholder='Dropdown' name='select' required
+    <Input type='select' placeholder='Select an option' name='select' required
       choices={[
         {text: 'A'},
         {text: 'B'},
@@ -44,16 +45,15 @@ ReactDOM.render(
     <Input type='multiline' placeholder='Multiline input' name='multiline'
       required rows='4' />
     <Input type='checkbox' label='A checkbox' name='checkbox' required />
-  </div>,
-  root
-);
-
-/*
-    <RadioGroup id='radio' legend='Bunch of radio buttons' name='radio'
-      required
+    <Input type='radio' label='A radio' name='radio' />
+    <Input type='radiogroup' label='A radio group' name='radiogroup' required
+      defaultValue='1'
       choices={[
         'Option A',
         'Option B',
         'Option C',
       ]} />
-*/
+
+  </div>,
+  root
+);
