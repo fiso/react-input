@@ -1,0 +1,16 @@
+{
+  "name": "react-input",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@fhaglund/replacevars": "^1.0.0",
+    "classnames": "^2.2.6",
+    "prop-types": "^15.7.2",
+    "react": "^16.11.0"
+  }
+}
